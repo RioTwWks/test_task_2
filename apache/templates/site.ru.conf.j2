@@ -1,0 +1,13 @@
+<VirtualHost *:8080>
+    ServerName site.ru
+    DocumentRoot /var/www/site.ru/public_html
+
+    <Directory /var/www/site.ru/public_html>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/site.ru_error.log
+    CustomLog ${APACHE_LOG_DIR}/site.ru_access.log combined
+</VirtualHost>

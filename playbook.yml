@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  become: true
+  roles:
+    - role: mysql
+    - role: nginx
+    - role: apache
+    - role: php-fpm
+    - role: bitrix
+    - role: phpmyadmin

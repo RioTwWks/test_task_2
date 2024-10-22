@@ -1,0 +1,21 @@
+---
+- name: Ensure the public_html directory exists
+  file:
+    path: /var/www/site.ru/public_html
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Download Bitrix CMS
+  get_url:
+    url: https://www.1c-bitrix.ru/download/scripts/bitrixsetup.php
+    dest: /var/www/site.ru/public_html/bitrixsetup.php
+
+- name: Set proper permissions
+  file:
+    path: /var/www/site.ru
+    owner: www-data
+    group: www-data
+    mode: '0755'
+    recurse: yes

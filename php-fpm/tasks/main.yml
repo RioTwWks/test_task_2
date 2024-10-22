@@ -1,0 +1,30 @@
+---
+- name: Add repository for older PHP versions
+  apt_repository:
+    repo: ppa:ondrej/php
+    state: present
+    update_cache: yes
+
+- name: Install PHP-FPM versions
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - php7.4-fpm
+    - php8.1-fpm
+
+- name: Configure pools for PHP versions
+  template:
+    src: fpm.conf.j2
+    dest: "/etc/php/{{ item }}/fpm/pool.d/{{ site_name }}.conf"
+  loop:
+    - 7.4
+    - 8.1
+
+- name: Restart PHP-FPM services
+  service:
+    name: "php{{ item }}-fpm"
+    state: restarted
+  loop:
+    - 7.4
+    - 8.1

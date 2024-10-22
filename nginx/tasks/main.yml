@@ -1,0 +1,30 @@
+---
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Configure site.ru
+  template:
+    src: site.ru.j2
+    dest: /etc/nginx/sites-available/site.ru
+
+- name: Configure site-2.ru
+  template:
+    src: site-2.ru.j2
+    dest: /etc/nginx/sites-available/site-2.ru
+
+- name: Enable Nginx sites
+  file:
+    src: "/etc/nginx/sites-available/{{ item }}"
+    dest: "/etc/nginx/sites-enabled/{{ item }}"
+    state: link
+  loop:
+    - site.ru
+    - site-2.ru
+
+- name: Reload Nginx
+  service:
+    name: nginx
+    state: restarted

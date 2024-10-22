@@ -1,0 +1,11 @@
+[site-2]
+user = site-2.ru
+group = site-2.ru
+listen = /var/run/php/php{{ item }}-fpm-{{ site_name }}.sock
+listen.owner = www-data
+listen.group = www-data
+pm = dynamic
+pm.max_children = 5
+pm.start_servers = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers = 3

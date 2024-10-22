@@ -1,0 +1,29 @@
+---
+- name: Download phpMyAdmin
+  get_url:
+    url: https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
+    dest: /tmp/phpmyadmin.tar.gz
+
+- name: Extract phpMyAdmin
+  unarchive:
+    src: /tmp/phpmyadmin.tar.gz
+    dest: /usr/share
+    remote_src: yes
+
+- name: Configure Nginx alias for phpMyAdmin
+  template:
+    src: phpmyadmin.j2
+    dest: /etc/nginx/snippets/phpmyadmin.conf
+
+- name: Include phpMyAdmin alias in sites
+  lineinfile:
+    path: "/etc/nginx/sites-available/{{ item }}"
+    line: 'include /etc/nginx/snippets/phpmyadmin.conf;'
+  loop:
+    - site.ru
+    - site-2.ru
+
+- name: Reload Nginx
+  service:
+    name: nginx
+    state: reloaded

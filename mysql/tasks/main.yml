@@ -1,0 +1,40 @@
+---
+- name: Install MySQL server
+  apt:
+    name: mysql-server
+    state: present
+    update_cache: yes
+
+- name: Start and enable MySQL service
+  systemd:
+    name: mysql
+    enabled: yes
+    state: started
+
+- name: Update package cache
+  apt:
+    name: '*'
+    state: latest
+
+- name: Install Python and pip
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - python3
+    - python3-pip
+
+- name: Install pymysql
+  pip:
+    name: pymysql
+    executable: pip3
+
+- name: Set root password
+  mysql_user:
+    name: root
+    password: "root_password"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    host_all: yes
+    priv: "*.*:ALL"
+    state: present
+    column_case_sensitive: true

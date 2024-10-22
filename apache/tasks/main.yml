@@ -1,0 +1,42 @@
+---
+- name: Install Apache2
+  apt:
+    name: apache2
+    state: present
+    update_cache: yes
+
+- name: Install PHP and libapache2-mod-php
+  apt:
+    name:
+      - php
+      - libapache2-mod-php
+    state: present
+    update_cache: yes
+
+- name: Enable mod_php and mod_proxy
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - php
+    - proxy
+    - proxy_http
+
+- name: Configure site.ru for Apache
+  template:
+    src: site.ru.conf.j2
+    dest: /etc/apache2/sites-available/site.ru.conf
+
+- name: Enable site.ru in Apache
+  command: a2ensite site.ru
+
+- name: Change Apache port to 8080
+  replace:
+    path: /etc/apache2/ports.conf
+    regexp: '^Listen 80'
+    replace: 'Listen 8080'
+
+- name: Reload Apache
+  service:
+    name: apache2
+    state: restarted
